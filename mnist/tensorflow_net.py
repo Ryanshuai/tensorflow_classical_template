@@ -27,7 +27,7 @@ class NET:
         # conv2
         self.W_conv2 = tf.Variable(xavier_init_conv2d([5,5,32,64]))
         self.b_conv2 = tf.constant(0.,shape=[64])
-        self.z_conv2 = tf.nn.conv2d(self.p_conv1,self.W_conv2,strides=[1,1,1,1],padding='SAME')+self.b_conv2
+        self.z_conv2 = tf.nn.conv2d(self.p_conv1, self.W_conv2, strides=[1, 1, 1, 1], padding='SAME') + self.b_conv2
         self.mean_conv2, self.variance_conv2 = tf.nn.moments(self.z_conv2, axes=[0, 1, 2])
         self.offset_conv2 = tf.Variable(tf.zeros([64]))
         self.scale_conv2 = tf.Variable(tf.ones([64]))
