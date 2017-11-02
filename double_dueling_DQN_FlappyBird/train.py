@@ -8,7 +8,8 @@ import cv2
 counter = Counter({'total_steps':0,'train_steps':0,'episode':0,'step_in_episode':0,'r_sum_in_episode':0,'loss':0})
 num_episodes = 10*1000
 max_step_in_one_episode = 100
-update_freq = 4
+train_freq = 1
+update_freq = 1000
 num_pre_train=1000
 save_mode_every = 1000
 
@@ -60,12 +61,15 @@ with tf.Session() as sess:
             counter.update(('step_in_episode',))
             counter['r_sum_in_episode'] += r
 
-            if counter['total_steps'] > num_pre_train and counter['total_steps'] % update_freq == 0:
+            if counter['total_steps'] > num_pre_train and counter['total_steps'] % train_freq == 0:
                 counter['loss'] = Agent.train_traing_net(sess, training_net, frozen_net, memory)
                 counter.update(('train_steps',))
+                print(counter)
+
+            if(counter['train_steps']%update_freq == 0):
                 updater.update_frozen_net(sess)
 
-            print(counter)
+
             if done==True:
                 break
 

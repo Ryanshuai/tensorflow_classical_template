@@ -181,7 +181,7 @@ class Chooser():
 
 class Updater():
     def __init__(self):
-        ur = 0.001
+        ur = 1
         frozen_params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Train_Q_Net')
         training_params = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Frozen_Q_Net')
         self.init_op_holder = []
