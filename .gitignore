@@ -5,3 +5,7 @@ mnist/MNIST_data/train-images-idx3-ubyte.gz
 mnist/MNIST_data/train-labels-idx1-ubyte.gz
 mnist/logs/with_BN/events.out.tfevents.1507730367.RYAN-DESKTOP
 mnist/logs/without_BN/events.out.tfevents.1507730586.RYAN-DESKTOP
+double_dueling_DQN_FlappyBird/model/checkpoint
+double_dueling_DQN_FlappyBird/model/model.cptk-1000.data-00000-of-00001
+double_dueling_DQN_FlappyBird/model/model.cptk-1000.index
+double_dueling_DQN_FlappyBird/model/model.cptk-1000.meta
