@@ -111,12 +111,12 @@ class TrainingQNetwork():
 
             self.td_error = tf.square(self.targetQ - self.Q)  # bs
             self.loss = tf.reduce_mean(self.td_error)  # 1
-            self.trainer = tf.train.AdamOptimizer(learning_rate=0.0001)
+            self.trainer = tf.train.RMSPropOptimizer(learning_rate=0.0001)
             self.updateModel = self.trainer.minimize(self.loss)
 
 
 class ExperienceMemory():
-    def __init__(self, memory_size=10000):
+    def __init__(self, memory_size=100000):
         self.memory = []
         self.memory_size = memory_size
 
@@ -158,14 +158,15 @@ class Chooser():
         self.initial_exploration = 1.  # 1. #initial
         self.final_exploration = 0.1
         self.e = self.initial_exploration
-        self.final_exploration_frame = 50000
+        self.final_exploration_frame = 100000
         self.num_pre_train=num_pre_train
+        self.delta_e = (self.initial_exploration - self.final_exploration) / self.final_exploration_frame
 
     def choose_action(self,sess,training_net,fi,total_step):
         flattened_fi = np.reshape(fi, [28224])
         if total_step>self.num_pre_train:
             if (self.e > self.final_exploration):
-                self.e -= (self.initial_exploration - self.final_exploration) / self.final_exploration_frame
+                self.e -= self.delta_e
             else:
                 self.e = self.final_exploration
 
