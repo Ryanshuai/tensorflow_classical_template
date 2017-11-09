@@ -11,7 +11,7 @@ class NET:
         self.flatten_im = tf.placeholder(tf.float32, [None, 784])
         self.input = tf.reshape(self.flatten_im, [-1, 28, 28, 1])
 
-        # conv1
+        # conv1  #[BS,28,28,3]->[BS,14,14,32]
         self.W_conv1 = tf.Variable(xavier_init_conv2d([5,5,1,32]))
         self.b_conv1 = tf.constant(0., shape=[32])
         self.z_conv1 = tf.nn.conv2d(self.input / 255, self.W_conv1, strides=[1, 1, 1, 1], padding='SAME') + self.b_conv1
@@ -24,7 +24,7 @@ class NET:
         self.sum_his_W_conv1 = tf.summary.histogram('W_conv1', self.W_conv1)
         self.sum_his_b_conv1 = tf.summary.histogram('b_conv1', self.b_conv1)
 
-        # conv2
+        # conv2  #[BS,14,14,32]->[BS,7,7,64]
         self.W_conv2 = tf.Variable(xavier_init_conv2d([5,5,32,64]))
         self.b_conv2 = tf.constant(0.,shape=[64])
         self.z_conv2 = tf.nn.conv2d(self.p_conv1, self.W_conv2, strides=[1, 1, 1, 1], padding='SAME') + self.b_conv2
@@ -37,9 +37,10 @@ class NET:
         self.sum_his_W_conv2 = tf.summary.histogram('W_conv2', self.W_conv2)
         self.sum_his_b_conv2 = tf.summary.histogram('b_conv2', self.b_conv2)
 
+        # flatten  #[BS,7,7,64]->[BS,7 * 7 * 64]
         self.p_conv2_flatten = tf.reshape(self.p_conv2, [-1, 7 * 7 * 64])
 
-        # fc1
+        # fc1  #[BS,3136]->[BS,1024]
         self.W_fc1 = tf.Variable(xavier_init([7 * 7 * 64, 1024]))
         self.b_fc1 = tf.constant(0., shape=[1024])
         self.z_fc1 = tf.matmul(self.p_conv2_flatten, self.W_fc1) + self.b_fc1
@@ -52,7 +53,7 @@ class NET:
         self.sum_his_W_fc1 = tf.summary.histogram('W_fc1', self.W_fc1)
         self.sum_his_b_fc1 = tf.summary.histogram('b_fc1', self.b_fc1)
 
-        # fc2
+        # fc2  #[BS,1024]->[BS,10]
         self.W_fc2 = tf.Variable(xavier_init([1024, 10]))
         self.b_fc2 = tf.constant(0., shape=[10])
         self.z_fc2 = tf.matmul(self.drop_fc1, self.W_fc2) + self.b_fc2
