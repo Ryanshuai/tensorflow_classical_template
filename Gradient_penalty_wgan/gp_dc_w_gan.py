@@ -4,20 +4,23 @@ import tensorflow as tf
 
 
 class GAN():
-    def __init__(self):
+    def __init__(self, batch_size):
+        self.BS = batch_size
         self.generator_reuse = False
         self.discriminator_reuse = False
 
-    def __get_image(self):
+    def _get_image(self):
+
+        return image
+
+    def _get_random_vector(self):
+        rand_vec = tf.random_uniform([self.BS, 100], minval=-1.0, maxval=1.0)
+        return rand_vec
+
+    def _generator(self, rand_vec):
         pass
 
-    def __get_random_vector(self):
-        pass
-
-    def __generator(self, rand_vec):
-        pass
-
-    def __discriminator(self, inputs):
+    def _discriminator(self, inputs):
         pass
 
     def build_graph(self):
@@ -28,7 +31,7 @@ class GAN():
 
 
 class gp_dc_w_gan(GAN):
-    def __generator(self, rand_vec):
+    def _generator(self, rand_vec):
         tensor_rand_vec = tf.convert_to_tensor(rand_vec)  #[BS,vec_size]
         with tf.variable_scope('generator'):
             #defc
@@ -46,7 +49,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv1  # [BS,4,4,1024]->[BS,8,8,512]
             W_deconv1 = tf.get_variable('W_deconv1', initializer=tf.truncated_normal_initializer([5, 5, 512, 1024], stddev=0.02))
-            z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [-1, 8, 8, 512], [1, 2, 2, 1])
+            z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self.BS, 8, 8, 512], [1, 2, 2, 1])
             mean_deconv1, variance_deconv1 = tf.nn.moments(z_deconv1, axes=[0, 1, 2])
             offset_deconv1 = tf.get_variable('offset_deconv1', initializer=tf.zeros([512]))
             scale_deconv1 = tf.get_variable('scale_deconv1', initializer=tf.ones([512]))
@@ -55,7 +58,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv2  # [BS,8,8,512]->[BS,16,16,256]
             W_deconv2 = tf.get_variable('W_deconv2', initializer=tf.truncated_normal_initializer([5, 5, 256, 512], stddev=0.02))
-            z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [-1, 16, 16, 256], [1, 2, 2, 1])
+            z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [self.BS, 16, 16, 256], [1, 2, 2, 1])
             mean_deconv2, variance_deconv2 = tf.nn.moments(z_deconv2, axes=[0, 1, 2])
             offset_deconv2 = tf.get_variable('offset_deconv2', initializer=tf.zeros([256]))
             scale_deconv2 = tf.get_variable('scale_deconv2', initializer=tf.ones([256]))
@@ -64,7 +67,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv3  # [BS,16,16,256]->[BS,32,32,128]
             W_deconv3 = tf.get_variable('W_deconv3', initializer=tf.truncated_normal_initializer([5, 5, 128, 256], stddev=0.02))
-            z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [-1, 32, 32, 128], [1, 2, 2, 1])
+            z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [self.BS, 32, 32, 128], [1, 2, 2, 1])
             mean_deconv3, variance_deconv3 = tf.nn.moments(z_deconv3, axes=[0, 1, 2])
             offset_deconv3 = tf.get_variable('offset_deconv3', initializer=tf.zeros([128]))
             scale_deconv3 = tf.get_variable('scale_deconv3', initializer=tf.ones([128]))
@@ -73,7 +76,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv4  # [BS,32,32,128]->[BS,64,64,64]
             W_deconv4 = tf.get_variable('W_deconv4', initializer=tf.truncated_normal_initializer([5, 5, 64, 128], stddev=0.02))
-            z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [-1, 64, 64, 64], [1, 2, 2, 1])
+            z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [self.BS, 64, 64, 64], [1, 2, 2, 1])
             mean_deconv4, variance_deconv4 = tf.nn.moments(z_deconv4, axes=[0, 1, 2])
             offset_deconv4 = tf.get_variable('offset_deconv4', initializer=tf.zeros([64]))
             scale_deconv4 = tf.get_variable('scale_deconv4', initializer=tf.ones([64]))
@@ -82,13 +85,13 @@ class gp_dc_w_gan(GAN):
 
             # deconv5  # [BS,64,64,64]->[BS,128,128,3]
             W_deconv5 = tf.get_variable('W_deconv5', initializer=tf.truncated_normal_initializer([5, 5, 3, 64], stddev=0.02))
-            z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [-1, 128, 128, 3], [1, 2, 2, 1])
+            z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self.BS, 128, 128, 3], [1, 2, 2, 1])
             a_deconv5 = tf.nn.tanh(z_deconv5)
 
         self.g_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='generator')
         return a_deconv5
 
-    def __discriminator(self, inputs):
+    def _discriminator(self, inputs):
         tensor_inputs = tf.convert_to_tensor(inputs)  #[BS,W,H,D]=[BS,128,128,3]
         with tf.name_scope('d'), tf.variable_scope('discriminator', reuse=self.discriminator_reuse):
             # conv1  #[BS,128,128,3]->[BS,64,64,64]
@@ -153,7 +156,38 @@ class gp_dc_w_gan(GAN):
         return logits
 
     def build_graph(self):
-        pass
+        # placeholder
+        self.random_vec = tf.placeholder(tf.float32, shape=[None, 100])
+        self.real_image = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
+        # wgan
+        self.fake_image = self._generator(self.random_vec) #[BS,128,128,3]
+        real_logits = self._discriminator(self.real_image) #[BS,1]
+        fake_logits = self._discriminator(self.fake_image) #[BS,1]
+        # d_gradient_penalty
+        alpha = tf.random_uniform(shape=[self.BS, 1],minval=0.,maxval=1.)
+        interpolates = alpha * self.real_image + ((1 - alpha) * self.fake_image) #[BS,128,128,3]
+        interpolates_logits = self._discriminator(interpolates) #[BS,1]
+        gradients = tf.gradients(interpolates_logits, [interpolates])[0] #[BS,128,128,3]
+        slopes = tf.sqrt(tf.reduce_sum(tf.square(gradients), reduction_indices=[1,2,3])) #[BS,1]
+        d_gradient_penalty = tf.reduce_mean((slopes - 1) ** 2)
+        # loss
+        self.d_loss = tf.reduce_mean(fake_logits) - tf.reduce_mean(real_logits) + 0.1*d_gradient_penalty #[BS,1]# This optimizes the discriminator.
+        self.g_loss = -tf.reduce_mean(fake_logits)  #[BS,1]# This optimizes the generator.
+        # optimize
+        self.d_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.d_loss, var_list=self.d_variables)
+        self.g_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.g_loss, var_list=self.g_variables)
 
     def train(self):
-        pass
+        with tf.Session() as sess:
+            sess.run(tf.global_variables_initializer())
+            sess.run(tf.local_variables_initializer())
+            for epoch in range(5000):
+                rand_vec = self._get_random_vector()
+                real_image = self._get_image()
+                _, dLoss = sess.run([self.d_optimizer, self.d_loss],
+                                    feed_dict={self.random_vec: rand_vec, self.real_image: real_image})
+                _, gLoss = sess.run([self.g_optimizer, self.g_loss],
+                                    feed_dict={self.random_vec: rand_vec})
+
+
+
