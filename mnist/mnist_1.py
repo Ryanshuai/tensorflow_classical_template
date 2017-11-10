@@ -25,7 +25,6 @@ with tf.Session(config = tf_config) as sess:
         print('no_pre_model')
 
     for train_step in range(int(1e6)):
-        print(train_step)
         batch_input, batch_target = mnist.train.next_batch(32)
         _,net_predict,net_train_sum=sess.run([net.optimize,net.predict,net.sum_merge_train],
             feed_dict={net.flatten_im:batch_input,net.target:batch_target,net.keep_prob:0.5})
@@ -36,6 +35,8 @@ with tf.Session(config = tf_config) as sess:
         net_accuracy,net_test_sum = sess.run([net.accuracy, net.sum_merge_test],
             feed_dict={net.flatten_im: test_input, net.target: test_target, net.keep_prob: 1})
         tf_sum_writer.add_summary(net_test_sum, train_step)
+
+        print(train_step, net_accuracy)
 
         if train_step % 1000 == 0:  # 10k
             saver.save(sess, 'tfModel_0/model.ckpt', global_step=train_step)
