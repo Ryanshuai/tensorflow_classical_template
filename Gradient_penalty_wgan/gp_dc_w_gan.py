@@ -1,20 +1,45 @@
 import tensorflow as tf
-
+import os
 
 
 
 class GAN():
     def __init__(self, batch_size):
-        self.BS = batch_size
-        self.generator_reuse = False
-        self.discriminator_reuse = False
+        self._BS = batch_size
+        self._discriminator_reuse = False
 
-    def _get_image(self):
+    def _get_dataset(self):
+        #get image paths
+        current_dir = os.getcwd()
+        # parent = os.path.dirname(current_dir)
+        pokemon_dir = os.path.join(current_dir, 'data')
+        image_paths = []
+        for each in os.listdir(pokemon_dir):
+            image_paths.append(os.path.join(pokemon_dir, each))
+        tensor_image_paths = tf.convert_to_tensor(image_paths, dtype=tf.string)
+        #data processing func used in map
+        def preprocessing(filename):
+            image_string = tf.read_file(filename)
+            image = tf.image.decode_image(image_string)
+            image = tf.image.resize_images(image, [128, 128])
+            image = tf.image.random_flip_left_right(image)
+            image = tf.image.random_brightness(image, max_delta=0.1)
+            image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
+            image = tf.cast(image, tf.float32)
+            image = image / 255.0
+            return image
+        #make dataset
+        dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
+        dataset = dataset.repeat(10)
+        dataset = dataset.map(preprocessing)
+        dataset = dataset.shuffle(buffer_size=10000)
+        dataset = dataset.batch(self._BS)
 
-        return image
+        capacity = len(tensor_image_paths)
+        return dataset, capacity
 
     def _get_random_vector(self):
-        rand_vec = tf.random_uniform([self.BS, 100], minval=-1.0, maxval=1.0)
+        rand_vec = tf.random_uniform([self._BS, 100], minval=-1.0, maxval=1.0)
         return rand_vec
 
     def _generator(self, rand_vec):
@@ -49,7 +74,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv1  # [BS,4,4,1024]->[BS,8,8,512]
             W_deconv1 = tf.get_variable('W_deconv1', initializer=tf.truncated_normal_initializer([5, 5, 512, 1024], stddev=0.02))
-            z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self.BS, 8, 8, 512], [1, 2, 2, 1])
+            z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self._BS, 8, 8, 512], [1, 2, 2, 1])
             mean_deconv1, variance_deconv1 = tf.nn.moments(z_deconv1, axes=[0, 1, 2])
             offset_deconv1 = tf.get_variable('offset_deconv1', initializer=tf.zeros([512]))
             scale_deconv1 = tf.get_variable('scale_deconv1', initializer=tf.ones([512]))
@@ -58,7 +83,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv2  # [BS,8,8,512]->[BS,16,16,256]
             W_deconv2 = tf.get_variable('W_deconv2', initializer=tf.truncated_normal_initializer([5, 5, 256, 512], stddev=0.02))
-            z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [self.BS, 16, 16, 256], [1, 2, 2, 1])
+            z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [self._BS, 16, 16, 256], [1, 2, 2, 1])
             mean_deconv2, variance_deconv2 = tf.nn.moments(z_deconv2, axes=[0, 1, 2])
             offset_deconv2 = tf.get_variable('offset_deconv2', initializer=tf.zeros([256]))
             scale_deconv2 = tf.get_variable('scale_deconv2', initializer=tf.ones([256]))
@@ -67,7 +92,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv3  # [BS,16,16,256]->[BS,32,32,128]
             W_deconv3 = tf.get_variable('W_deconv3', initializer=tf.truncated_normal_initializer([5, 5, 128, 256], stddev=0.02))
-            z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [self.BS, 32, 32, 128], [1, 2, 2, 1])
+            z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [self._BS, 32, 32, 128], [1, 2, 2, 1])
             mean_deconv3, variance_deconv3 = tf.nn.moments(z_deconv3, axes=[0, 1, 2])
             offset_deconv3 = tf.get_variable('offset_deconv3', initializer=tf.zeros([128]))
             scale_deconv3 = tf.get_variable('scale_deconv3', initializer=tf.ones([128]))
@@ -76,7 +101,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv4  # [BS,32,32,128]->[BS,64,64,64]
             W_deconv4 = tf.get_variable('W_deconv4', initializer=tf.truncated_normal_initializer([5, 5, 64, 128], stddev=0.02))
-            z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [self.BS, 64, 64, 64], [1, 2, 2, 1])
+            z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [self._BS, 64, 64, 64], [1, 2, 2, 1])
             mean_deconv4, variance_deconv4 = tf.nn.moments(z_deconv4, axes=[0, 1, 2])
             offset_deconv4 = tf.get_variable('offset_deconv4', initializer=tf.zeros([64]))
             scale_deconv4 = tf.get_variable('scale_deconv4', initializer=tf.ones([64]))
@@ -85,7 +110,7 @@ class gp_dc_w_gan(GAN):
 
             # deconv5  # [BS,64,64,64]->[BS,128,128,3]
             W_deconv5 = tf.get_variable('W_deconv5', initializer=tf.truncated_normal_initializer([5, 5, 3, 64], stddev=0.02))
-            z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self.BS, 128, 128, 3], [1, 2, 2, 1])
+            z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self._BS, 128, 128, 3], [1, 2, 2, 1])
             a_deconv5 = tf.nn.tanh(z_deconv5)
 
         self.g_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='generator')
@@ -93,7 +118,7 @@ class gp_dc_w_gan(GAN):
 
     def _discriminator(self, inputs):
         tensor_inputs = tf.convert_to_tensor(inputs)  #[BS,W,H,D]=[BS,128,128,3]
-        with tf.name_scope('d'), tf.variable_scope('discriminator', reuse=self.discriminator_reuse):
+        with tf.name_scope('d'), tf.variable_scope('discriminator', reuse=self._discriminator_reuse):
             # conv1  #[BS,128,128,3]->[BS,64,64,64]
             W_conv1 = tf.get_variable('W_conv1', initializer=tf.truncated_normal_initializer([5, 5, 1, 64], stddev=0.02))
             b_conv1 = tf.get_variable('b_conv1', initializer=tf.constant([64], 0.))
@@ -151,7 +176,7 @@ class gp_dc_w_gan(GAN):
             b_fc1 = tf.get_variable('b_fc1', initializer=tf.constant_initializer([1], 0.))
             logits = tf.matmul(flatten, W_fc1) + b_fc1
 
-        self.discriminator_reuse = True
+        self._discriminator_reuse = True
         self.d_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='discriminator')
         return logits
 
@@ -164,7 +189,7 @@ class gp_dc_w_gan(GAN):
         real_logits = self._discriminator(self.real_image) #[BS,1]
         fake_logits = self._discriminator(self.fake_image) #[BS,1]
         # d_gradient_penalty
-        alpha = tf.random_uniform(shape=[self.BS, 1],minval=0.,maxval=1.)
+        alpha = tf.random_uniform(shape=[self._BS, 1], minval=0., maxval=1.)
         interpolates = alpha * self.real_image + ((1 - alpha) * self.fake_image) #[BS,128,128,3]
         interpolates_logits = self._discriminator(interpolates) #[BS,1]
         gradients = tf.gradients(interpolates_logits, [interpolates])[0] #[BS,128,128,3]
@@ -178,16 +203,30 @@ class gp_dc_w_gan(GAN):
         self.g_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.g_loss, var_list=self.g_variables)
 
     def train(self):
+
+
+        tf_sum_writer = tf.summary.FileWriter('logs/without_BN')
+        saver = tf.train.Saver()
+        ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel_0/')
+
+        image_dataset, dataset_size = self._get_dataset()
+
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
+            if ckpt and ckpt.model_checkpoint_path:
+                print('loading_model')
+                saver.restore(sess, ckpt.model_checkpoint_path)
+            else:
+                print('no_pre_model')
             for epoch in range(5000):
-                rand_vec = self._get_random_vector()
-                real_image = self._get_image()
-                _, dLoss = sess.run([self.d_optimizer, self.d_loss],
-                                    feed_dict={self.random_vec: rand_vec, self.real_image: real_image})
-                _, gLoss = sess.run([self.g_optimizer, self.g_loss],
-                                    feed_dict={self.random_vec: rand_vec})
+                for j in range(dataset_size):
+                    rand_vec = self._get_random_vector()
+
+                    _, dLoss = sess.run([self.d_optimizer, self.d_loss],
+                                        feed_dict={self.random_vec: rand_vec, self.real_image: real_image})
+                    _, gLoss = sess.run([self.g_optimizer, self.g_loss],
+                                        feed_dict={self.random_vec: rand_vec})
 
 
 
