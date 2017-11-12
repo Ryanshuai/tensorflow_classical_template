@@ -34,8 +34,8 @@ class GAN():
         dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
         dataset = dataset.repeat(10)
         dataset = dataset.map(preprocessing)
-        #dataset = dataset.shuffle(buffer_size=10000)
-        #dataset = dataset.batch(self._BS)
+        dataset = dataset.shuffle(buffer_size=10000)
+        dataset = dataset.batch(self._BS)
 
         return dataset
 
@@ -206,24 +206,12 @@ class gp_dc_w_gan(GAN):
         self.g_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.g_loss, var_list=self.g_variables)
 
     def train(self):
-        tf_sum_writer = tf.summary.FileWriter('logs')
-
-        saver = tf.train.Saver()
-        ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel_0/')
-
         image_dataset = self._get_dataset()
         iterator = image_dataset.make_initializable_iterator()
 
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
-            if ckpt and ckpt.model_checkpoint_path:
-                print('loading_model')
-                saver.restore(sess, ckpt.model_checkpoint_path)
-            else:
-                print('no_pre_model')
-
-            tf_sum_writer.add_graph(sess.graph)
 
             global_step = 0
             for epoch in range(5000):
@@ -234,34 +222,9 @@ class gp_dc_w_gan(GAN):
                         real_image = sess.run(iterator.get_next())
                     except tf.errors.OutOfRangeError:
                         break
-                    rand_vec = self._get_random_vector()
-                    _, dLoss, sum_d = sess.run([self.d_optimizer, self.d_loss, self.sum_his_d_loss],
-                                        feed_dict={self.random_vec: rand_vec, self.real_image: real_image})
-                    _, gLoss, sum_g = sess.run([self.g_optimizer, self.g_loss, self.sum_his_g_loss],
-                                        feed_dict={self.random_vec: rand_vec})
-
-                    if epoch_step % 10 == 0: # tensorboard
-                        tf_sum_writer.add_summary(sum_d, global_step=global_step)
-                        tf_sum_writer.add_summary(sum_g, global_step=global_step)
 
                     print('epoch:', epoch, 'epoch_step:', epoch_step, 'global_step:', global_step)
 
-
-                if epoch % 500 == 0: # save model
-                    if not os.path.exists('./model/'):
-                        os.makedirs('./model/')
-                    saver.save(sess, './model/epoch' + str(epoch))
-
-                if epoch % 50 == 0: # save images
-                    fake_image_path = './image/epoch' + str(epoch)
-                    if not os.path.exists(fake_image_path):
-                        os.makedirs(fake_image_path)
-                    test_vec = self._get_random_vector()
-                    img_test = sess.run(self.fake_image, feed_dict={self.random_vec: test_vec})
-                    img_test = img_test * 255.0
-                    img_test.astype(np.uint8)
-                    for i in self._BS:
-                        cv2.imwrite(fake_image_path + str(i) + '.jpg', img_test[i])
 
 
 if __name__ == "__main__":
