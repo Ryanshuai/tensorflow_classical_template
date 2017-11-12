@@ -1,5 +1,7 @@
 import tensorflow as tf
 import os
+import numpy as np
+import cv2
 
 
 class GAN():
@@ -234,7 +236,7 @@ class gp_dc_w_gan(GAN):
                     _, gLoss, sum_g = sess.run([self.g_optimizer, self.g_loss, self.sum_his_g_loss],
                                         feed_dict={self.random_vec: rand_vec})
 
-                    if train_step % 10 == 0:
+                    if train_step % 10 == 0: # tensorboard
                         tf_sum_writer.add_summary(sum_d)
                         tf_sum_writer.add_summary(sum_g)
 
@@ -249,10 +251,11 @@ class gp_dc_w_gan(GAN):
                     if not os.path.exists(fake_image_path):
                         os.makedirs(fake_image_path)
                     test_vec = self._get_random_vector()
-                    imgtest = sess.run(self.fake_image, feed_dict={self.random_vec: test_vec})
-                    # imgtest = imgtest * 255.0
-                    # imgtest.astype(np.uint8)
-                    save_images(imgtest, [8, 8], fake_image_path + '/epoch' + str(i) + '.jpg')
+                    img_test = sess.run(self.fake_image, feed_dict={self.random_vec: test_vec})
+                    img_test = img_test * 255.0
+                    img_test.astype(np.uint8)
+                    for i in self._BS:
+                        cv2.imwrite(fake_image_path + str(i) + '.jpg', img_test[i])
 
 
 if __name__ == "__main__":
