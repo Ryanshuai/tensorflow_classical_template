@@ -12,3 +12,6 @@ mnist/logs/without_BN/events.out.tfevents.1507730586.RYAN-DESKTOP
 
 *.data-00000-of-00001
 double_dueling_DQN_FlappyBird/model/checkpoint
+*.RYAN-DESKTOP
+*.jpg
+*.png

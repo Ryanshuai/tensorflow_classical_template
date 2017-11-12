@@ -23,16 +23,16 @@ class GAN():
             image_string = tf.read_file(filename)
             image = tf.image.decode_png(image_string)
             image = tf.image.resize_images(image, [128, 128])
+            image.set_shape([128, 128, 3])
             image = tf.image.random_flip_left_right(image)
             image = tf.image.random_brightness(image, max_delta=0.1)
             image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
             image = tf.cast(image, tf.float32)
             image = image / 255.0
-            image.set_shape([128, 128, 3])
             return image
         #make dataset
         dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
-        dataset = dataset.repeat(100)
+        dataset = dataset.repeat(10)
         dataset = dataset.map(preprocessing)
         dataset = dataset.shuffle(buffer_size=10000)
         dataset = dataset.batch(self._BS)
@@ -40,7 +40,7 @@ class GAN():
         return dataset
 
     def _get_random_vector(self):
-        rand_vec = tf.random_uniform([self._BS, 100], minval=-1.0, maxval=1.0)
+        rand_vec = np.random.uniform(-1.0, 1.0, size=[self._BS, 100]).astype(np.float32)
         return rand_vec
 
     def _generator(self, rand_vec):
@@ -231,7 +231,7 @@ class gp_dc_w_gan(GAN):
                 epoch_step = 0
                 while True:
                     try:
-                        real_image = sess.run(sess.run(iterator.get_next()))
+                        real_image = sess.run(iterator.get_next())
                     except tf.errors.OutOfRangeError:
                         break
                     rand_vec = self._get_random_vector()
