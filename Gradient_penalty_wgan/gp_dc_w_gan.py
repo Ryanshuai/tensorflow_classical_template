@@ -2,7 +2,6 @@ import tensorflow as tf
 import os
 
 
-
 class GAN():
     def __init__(self, batch_size):
         self._BS = batch_size
@@ -198,18 +197,21 @@ class gp_dc_w_gan(GAN):
         # loss
         self.d_loss = tf.reduce_mean(fake_logits) - tf.reduce_mean(real_logits) + 0.1*d_gradient_penalty #[BS,1]# This optimizes the discriminator.
         self.g_loss = -tf.reduce_mean(fake_logits)  #[BS,1]# This optimizes the generator.
+        self.sum_his_d_loss = tf.summary.histogram('d_loss', self.d_loss)
+        self.sum_his_g_loss = tf.summary.histogram('g_loss', self.g_loss)
+        self.sum_merge = tf.summary.merge_all()
         # optimize
         self.d_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.d_loss, var_list=self.d_variables)
         self.g_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.g_loss, var_list=self.g_variables)
 
     def train(self):
+        tf_sum_writer = tf.summary.FileWriter('logs')
 
-
-        tf_sum_writer = tf.summary.FileWriter('logs/without_BN')
         saver = tf.train.Saver()
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel_0/')
 
         image_dataset, dataset_size = self._get_dataset()
+        iterator = image_dataset.make_initializable_iterator()
 
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
@@ -219,14 +221,41 @@ class gp_dc_w_gan(GAN):
                 saver.restore(sess, ckpt.model_checkpoint_path)
             else:
                 print('no_pre_model')
-            for epoch in range(5000):
-                for j in range(dataset_size):
-                    rand_vec = self._get_random_vector()
 
-                    _, dLoss = sess.run([self.d_optimizer, self.d_loss],
+            tf_sum_writer.add_graph(sess.graph)
+
+            for epoch in range(5000):
+                sess.run(iterator.initializer)
+                for train_step in range(dataset_size):
+                    rand_vec = self._get_random_vector()
+                    real_image = sess.run(iterator.get_next())
+                    _, dLoss, sum_d = sess.run([self.d_optimizer, self.d_loss, self.sum_his_d_loss],
                                         feed_dict={self.random_vec: rand_vec, self.real_image: real_image})
-                    _, gLoss = sess.run([self.g_optimizer, self.g_loss],
+                    _, gLoss, sum_g = sess.run([self.g_optimizer, self.g_loss, self.sum_his_g_loss],
                                         feed_dict={self.random_vec: rand_vec})
 
+                    if train_step % 10 == 0:
+                        tf_sum_writer.add_summary(sum_d)
+                        tf_sum_writer.add_summary(sum_g)
 
 
+                if epoch % 500 == 0: # save model
+                    if not os.path.exists('./model/'):
+                        os.makedirs('./model/')
+                    saver.save(sess, './model/epoch' + str(epoch))
+
+                if epoch % 50 == 0: # save images
+                    fake_image_path = './image/epoch' + str(epoch)
+                    if not os.path.exists(fake_image_path):
+                        os.makedirs(fake_image_path)
+                    test_vec = self._get_random_vector()
+                    imgtest = sess.run(self.fake_image, feed_dict={self.random_vec: test_vec})
+                    # imgtest = imgtest * 255.0
+                    # imgtest.astype(np.uint8)
+                    save_images(imgtest, [8, 8], fake_image_path + '/epoch' + str(i) + '.jpg')
+
+
+if __name__ == "__main__":
+    gan = gp_dc_w_gan(32)
+    gan.build_graph()
+    gan.train()
