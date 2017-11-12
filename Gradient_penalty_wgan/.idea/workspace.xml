@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc00c6b8-5a8a-4e6b-ac91-349c638df4f1" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gp_dc_w_gan.py" afterPath="$PROJECT_DIR$/gp_dc_w_gan.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,26 +18,24 @@
         <entry file="file://$PROJECT_DIR$/gp_dc_w_gan.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="703">
-              <caret line="257" column="52" lean-forward="false" selection-start-line="257" selection-start-column="52" selection-end-line="257" selection-end-column="52" />
+              <caret line="246" column="68" lean-forward="false" selection-start-line="246" selection-start-column="68" selection-end-line="246" selection-end-column="68" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
                 <element signature="e#123#186#0" expanded="false" />
-                <element signature="e#224#1496#0" expanded="false" />
-                <element signature="e#1883#6286#0" expanded="false" />
-                <element signature="e#6334#10873#0" expanded="false" />
+                <element signature="e#1872#6275#0" expanded="false" />
+                <element signature="e#6323#10781#0" expanded="false" />
+                <element signature="e#10818#12492#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="three_to_two.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Desktop/projecting/face_plus_plus/handle_mix/three_to_two.py">
+      <file leaf-file-name="writer.py" pinned="false" current-in-tab="false">
+        <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/summary/writer/writer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="311">
+              <caret line="96" column="6" lean-forward="false" selection-start-line="96" selection-start-column="6" selection-end-line="96" selection-end-column="6" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -54,6 +53,8 @@
       <find>process_data</find>
       <find>save_images</find>
       <find>BS</find>
+      <find>alpha</find>
+      <find>shape</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -71,8 +72,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-30" />
-    <option name="y" value="-16" />
+    <option name="x" value="-76" />
+    <option name="y" value="-26" />
     <option name="width" value="1872" />
     <option name="height" value="1100" />
   </component>
@@ -123,6 +124,30 @@
       </list>
     </option>
   </component>
+  <component name="RunManager" selected="Python.gp_dc_w_gan">
+    <configuration name="gp_dc_w_gan" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Gradient_penalty_wgan" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gp_dc_w_gan.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Python.gp_dc_w_gan" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
@@ -143,21 +168,21 @@
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20255864" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1098081" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.74307036" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3022388" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32846716" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -168,7 +193,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -180,9 +205,9 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -194,9 +219,9 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -208,9 +233,9 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -222,9 +247,9 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -236,31 +261,9 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dcgan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="15" column="75" lean-forward="false" selection-start-line="15" selection-start-column="69" selection-end-line="15" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gp_dc_w_gan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -280,9 +283,31 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dcgan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="15" column="75" lean-forward="false" selection-start-line="15" selection-start-column="69" selection-end-line="15" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gp_dc_w_gan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#123#186#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -345,16 +370,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pokeGAN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1544">
-          <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="281" selection-end-column="11" />
-          <folding>
-            <element signature="e#60#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/Pokemon_GAN-master/pokeGAN.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1419">
@@ -368,16 +383,8 @@
         <state relative-caret-position="463">
           <caret line="27" column="23" lean-forward="true" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/summary/writer/writer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="158" column="27" lean-forward="false" selection-start-line="158" selection-start-column="22" selection-end-line="158" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -386,7 +393,41 @@
         <state relative-caret-position="475">
           <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="41" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/framework/common_shapes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="685" column="0" lean-forward="false" selection-start-line="685" selection-start-column="0" selection-end-line="685" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/framework/constant_op.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="128" column="4" lean-forward="false" selection-start-line="128" selection-start-column="4" selection-end-line="128" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/summary/writer/writer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="96" column="6" lean-forward="false" selection-start-line="96" selection-start-column="6" selection-end-line="96" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pokeGAN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="348">
+          <caret line="49" column="4" lean-forward="false" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="43" />
+          <folding>
+            <element signature="e#60#69#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -394,13 +435,13 @@
     <entry file="file://$PROJECT_DIR$/gp_dc_w_gan.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="703">
-          <caret line="257" column="52" lean-forward="false" selection-start-line="257" selection-start-column="52" selection-end-line="257" selection-end-column="52" />
+          <caret line="246" column="68" lean-forward="false" selection-start-line="246" selection-start-column="68" selection-end-line="246" selection-end-column="68" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
             <element signature="e#123#186#0" expanded="false" />
-            <element signature="e#224#1496#0" expanded="false" />
-            <element signature="e#1883#6286#0" expanded="false" />
-            <element signature="e#6334#10873#0" expanded="false" />
+            <element signature="e#1872#6275#0" expanded="false" />
+            <element signature="e#6323#10781#0" expanded="false" />
+            <element signature="e#10818#12492#0" expanded="false" />
           </folding>
         </state>
       </provider>
