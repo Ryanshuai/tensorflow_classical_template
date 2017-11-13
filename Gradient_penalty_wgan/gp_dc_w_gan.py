@@ -13,7 +13,7 @@ class GAN():
         #get image paths
         current_dir = os.getcwd()
         # parent = os.path.dirname(current_dir)
-        pokemon_dir = os.path.join(current_dir, 'data')
+        pokemon_dir = os.path.join(current_dir, 'jpg_data')
         image_paths = []
         for each in os.listdir(pokemon_dir):
             image_paths.append(os.path.join(pokemon_dir, each))
@@ -32,10 +32,10 @@ class GAN():
             return image
         #make dataset
         dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
-        dataset = dataset.repeat(10)
+        dataset = dataset.repeat(32)
         dataset = dataset.map(preprocessing)
-        #dataset = dataset.shuffle(buffer_size=10000)
-        #dataset = dataset.batch(self._BS)
+        # dataset = dataset.shuffle(3200)
+        dataset = dataset.batch(self._BS)
 
         return dataset
 
@@ -113,6 +113,7 @@ class gp_dc_w_gan(GAN):
             W_deconv5 = tf.get_variable('W_deconv5', [5, 5, 3, 64], initializer=tf.truncated_normal_initializer(stddev=0.02))
             z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self._BS, 128, 128, 3], [1, 2, 2, 1])
             a_deconv5 = tf.nn.tanh(z_deconv5)
+            self.a_deconv5 = a_deconv5
 
         self.g_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='generator')
         return a_deconv5
@@ -226,7 +227,7 @@ class gp_dc_w_gan(GAN):
             tf_sum_writer.add_graph(sess.graph)
 
             global_step = 0
-            for epoch in range(5000):
+            for epoch in range(1,5001):
                 sess.run(iterator.initializer)
                 epoch_step = 0
                 while True:
@@ -245,6 +246,7 @@ class gp_dc_w_gan(GAN):
                         tf_sum_writer.add_summary(sum_g, global_step=global_step)
 
                     print('epoch:', epoch, 'epoch_step:', epoch_step, 'global_step:', global_step)
+                    epoch_step, global_step = epoch_step + 1, global_step + 1
 
 
                 if epoch % 500 == 0: # save model
@@ -252,16 +254,16 @@ class gp_dc_w_gan(GAN):
                         os.makedirs('./model/')
                     saver.save(sess, './model/epoch' + str(epoch))
 
-                if epoch % 50 == 0: # save images
-                    fake_image_path = './image/epoch' + str(epoch)
+                if epoch % 50 == 1: # save images
+                    fake_image_path = './generated_image/epoch' + str(epoch)
                     if not os.path.exists(fake_image_path):
                         os.makedirs(fake_image_path)
                     test_vec = self._get_random_vector()
                     img_test = sess.run(self.fake_image, feed_dict={self.random_vec: test_vec})
                     img_test = img_test * 255.0
                     img_test.astype(np.uint8)
-                    for i in self._BS:
-                        cv2.imwrite(fake_image_path + str(i) + '.jpg', img_test[i])
+                    for i in range(self._BS):
+                        cv2.imwrite(fake_image_path + '/' + str(i) + '.jpg', img_test[i])
 
 
 if __name__ == "__main__":
