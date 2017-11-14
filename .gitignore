@@ -15,3 +15,4 @@ double_dueling_DQN_FlappyBird/model/checkpoint
 *.RYAN-DESKTOP
 *.jpg
 *.png
+Gradient_penalty_wgan/tfModel/checkpoint

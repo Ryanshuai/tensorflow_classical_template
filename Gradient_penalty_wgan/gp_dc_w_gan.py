@@ -13,7 +13,7 @@ class GAN():
         #get image paths
         current_dir = os.getcwd()
         # parent = os.path.dirname(current_dir)
-        pokemon_dir = os.path.join(current_dir, 'jpg_data')
+        pokemon_dir = os.path.join(current_dir, 'real_image')
         image_paths = []
         for each in os.listdir(pokemon_dir):
             image_paths.append(os.path.join(pokemon_dir, each))
@@ -24,15 +24,15 @@ class GAN():
             image = tf.image.decode_png(image_string)
             image = tf.image.resize_images(image, [128, 128])
             image.set_shape([128, 128, 3])
-            image = tf.image.random_flip_left_right(image)
-            image = tf.image.random_brightness(image, max_delta=0.1)
-            image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
+            # image = tf.image.random_flip_left_right(image)
+            # image = tf.image.random_brightness(image, max_delta=0.1)
+            # image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
             image = tf.cast(image, tf.float32)
             image = image / 255.0
             return image
         #make dataset
         dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
-        dataset = dataset.repeat(32)
+        #dataset = dataset.repeat(32)
         dataset = dataset.map(preprocessing)
         # dataset = dataset.shuffle(3200)
         dataset = dataset.batch(self._BS)
@@ -199,8 +199,8 @@ class gp_dc_w_gan(GAN):
         # loss
         self.d_loss = tf.reduce_mean(fake_logits) - tf.reduce_mean(real_logits) + 0.1*d_gradient_penalty #[BS,1]# This optimizes the discriminator.
         self.g_loss = -tf.reduce_mean(fake_logits)  #[BS,1]# This optimizes the generator.
-        self.sum_his_d_loss = tf.summary.histogram('d_loss', self.d_loss)
-        self.sum_his_g_loss = tf.summary.histogram('g_loss', self.g_loss)
+        self.sum_his_d_loss = tf.summary.scalar('d_loss', self.d_loss)
+        self.sum_his_g_loss = tf.summary.scalar('g_loss', self.g_loss)
         self.sum_merge = tf.summary.merge_all()
         # optimize
         self.d_optimizer = tf.train.AdamOptimizer(learning_rate=0.0002, beta1=0.5).minimize(self.d_loss, var_list=self.d_variables)
@@ -210,7 +210,7 @@ class gp_dc_w_gan(GAN):
         tf_sum_writer = tf.summary.FileWriter('logs')
 
         saver = tf.train.Saver()
-        ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel_0/')
+        ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel/')
 
         image_dataset = self._get_dataset()
         iterator = image_dataset.make_initializable_iterator()
@@ -221,13 +221,16 @@ class gp_dc_w_gan(GAN):
             if ckpt and ckpt.model_checkpoint_path:
                 print('loading_model')
                 saver.restore(sess, ckpt.model_checkpoint_path)
+                pre_model_epoch = int(ckpt.model_checkpoint_path[13:])
+                print('pre_model_epoch:', pre_model_epoch)
             else:
+                pre_model_epoch = 0
                 print('no_pre_model')
 
             tf_sum_writer.add_graph(sess.graph)
 
             global_step = 0
-            for epoch in range(1,5001):
+            for epoch in range(pre_model_epoch + 1, pre_model_epoch + 500):
                 sess.run(iterator.initializer)
                 epoch_step = 0
                 while True:
@@ -249,12 +252,14 @@ class gp_dc_w_gan(GAN):
                     epoch_step, global_step = epoch_step + 1, global_step + 1
 
 
-                if epoch % 500 == 0: # save model
-                    if not os.path.exists('./model/'):
-                        os.makedirs('./model/')
-                    saver.save(sess, './model/epoch' + str(epoch))
 
-                if epoch % 50 == 1: # save images
+                if epoch % 5 == 0: # save model
+                    print('---------------------')
+                    if not os.path.exists('./tfModel/'):
+                        os.makedirs('./tfModel/')
+                    saver.save(sess, './tfModel/epoch' + str(epoch))
+
+                if epoch % 1 == 0: # save images
                     fake_image_path = './generated_image/epoch' + str(epoch)
                     if not os.path.exists(fake_image_path):
                         os.makedirs(fake_image_path)
