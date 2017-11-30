@@ -5,8 +5,9 @@ import cv2
 
 
 class GAN():
-    def __init__(self, batch_size):
+    def __init__(self, batch_size, z_dim):
         self._BS = batch_size
+        self.z_dim = z_dim
         self._discriminator_reuse = False
 
     def _get_dataset(self):
@@ -40,7 +41,7 @@ class GAN():
         return dataset
 
     def _get_random_vector(self):
-        rand_vec = np.random.normal(size=[self._BS, 100]).astype(np.float32)
+        rand_vec = np.random.normal(size=[self._BS, self.z_dim]).astype(np.float32)
         return rand_vec
 
     def _generator(self, rand_vec):
@@ -51,7 +52,7 @@ class GAN():
 
     def build_graph(self):
         # placeholder
-        self.random_vec = tf.placeholder(tf.float32, shape=[None, 100])
+        self.random_vec = tf.placeholder(tf.float32, shape=[None, self.z_dim])
         self.real_image = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
         # gan
         self.fake_image = self._generator(self.random_vec) #[BS,128,128,3]
@@ -263,7 +264,7 @@ class dc_w_gan(GAN):
 
     def build_graph(self):
         # placeholder
-        self.random_vec = tf.placeholder(tf.float32, shape=[None, 100])
+        self.random_vec = tf.placeholder(tf.float32, shape=[None, self.z_dim])
         self.real_image = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
         # wgan
         self.fake_image = self._generator(self.random_vec) #[BS,128,128,3]
@@ -473,7 +474,7 @@ class gp_dc_w_gan(GAN):
 
     def build_graph(self):
         # placeholder
-        self.random_vec = tf.placeholder(tf.float32, shape=[None, 100])
+        self.random_vec = tf.placeholder(tf.float32, shape=[None, self.z_dim])
         self.real_image = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
         # wgan
         self.fake_image = self._generator(self.random_vec) #[BS,128,128,3]
