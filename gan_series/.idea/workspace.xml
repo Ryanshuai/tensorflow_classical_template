@@ -14,34 +14,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="VAE.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="VAE.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../VAE/VAE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-150">
-              <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+            <state relative-caret-position="452">
+              <caret line="82" column="68" lean-forward="false" selection-start-line="82" selection-start-column="68" selection-end-line="82" selection-end-column="68" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
                 <element signature="e#506#1768#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gan_series.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/gan_series.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="497" column="131" lean-forward="true" selection-start-line="497" selection-start-column="131" selection-end-line="497" selection-end-column="131" />
-              <folding>
-                <element signature="e#83#6151#0" expanded="false" />
-                <element signature="e#258#1520#0" expanded="false" />
-                <element signature="e#6179#19373#0" expanded="false" />
-                <element signature="e#6341#10537#0" expanded="false" />
-                <element signature="e#10709#15167#0" expanded="false" />
-                <element signature="e#19404#30032#0" expanded="false" />
-                <element signature="e#19444#23886#0" expanded="false" />
-                <element signature="e#19566#23762#0" expanded="false" />
-                <element signature="e#23934#28392#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -98,14 +78,14 @@
         <option value="$PROJECT_DIR$/test333333333333.py" />
         <option value="$PROJECT_DIR$/ckpt_test.py" />
         <option value="$PROJECT_DIR$/gp_dc_w_gan.py" />
-        <option value="$PROJECT_DIR$/../VAE/VAE.py" />
         <option value="$PROJECT_DIR$/gan_series.py" />
+        <option value="$PROJECT_DIR$/../VAE/VAE.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="75" />
-    <option name="y" value="-15" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="253" />
+    <option name="y" value="-13" />
     <option name="width" value="1859" />
     <option name="height" value="948" />
   </component>
@@ -297,8 +277,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="-8" width="1861" height="1096" extended-state="7" />
-    <editor active="true" />
+    <frame x="67" y="-8" width="1861" height="1096" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13875338" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -435,6 +414,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
           <caret line="1213" column="4" lean-forward="false" selection-start-line="1213" selection-start-column="4" selection-end-line="1213" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -477,17 +457,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../VAE/VAE.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <element signature="e#506#1768#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Labgit_project/GAN_part/gan_series.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -500,18 +469,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gan_series.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="497" column="131" lean-forward="true" selection-start-line="497" selection-start-column="131" selection-end-line="497" selection-end-column="131" />
+        <state relative-caret-position="150">
+          <caret line="255" column="43" lean-forward="true" selection-start-line="200" selection-start-column="8" selection-end-line="256" selection-end-column="54" />
           <folding>
-            <element signature="e#83#6151#0" expanded="false" />
+            <element signature="e#0#23#0" expanded="true" />
             <element signature="e#258#1520#0" expanded="false" />
-            <element signature="e#6179#19373#0" expanded="false" />
-            <element signature="e#6341#10537#0" expanded="false" />
-            <element signature="e#10709#15167#0" expanded="false" />
-            <element signature="e#19404#30032#0" expanded="false" />
-            <element signature="e#19444#23886#0" expanded="false" />
-            <element signature="e#19566#23762#0" expanded="false" />
-            <element signature="e#23934#28392#0" expanded="false" />
+            <element signature="e#23807#28265#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../VAE/VAE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="82" column="68" lean-forward="false" selection-start-line="82" selection-start-column="68" selection-end-line="82" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#506#1768#0" expanded="false" />
           </folding>
         </state>
       </provider>

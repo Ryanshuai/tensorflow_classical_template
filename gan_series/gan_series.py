@@ -41,8 +41,7 @@ class GAN():
         return dataset
 
     def _get_random_vector(self):
-        rand_vec = np.random.normal(size=[self._BS, self.z_dim]).astype(np.float32)
-        return rand_vec
+        return np.random.normal(size=[self._BS, self.z_dim]).astype(np.float32)
 
     def _generator(self, rand_vec):
         pass
@@ -138,13 +137,13 @@ class GAN():
 
 
 class dc_w_gan(GAN):
-    def _generator(self, rand_vec):
-        tensor_rand_vec = tf.convert_to_tensor(rand_vec)  #[BS,vec_size]
+    def _generator(self, z):
+        tensor_z = tf.convert_to_tensor(z)  #[BS,vec_size]
         with tf.variable_scope('generator'):
             #defc
-            W_defc = tf.get_variable('W_defc', [tensor_rand_vec.shape[1].value, 4 * 4 * 1024], initializer=tf.truncated_normal_initializer(stddev=0.02))
+            W_defc = tf.get_variable('W_defc', [tensor_z.shape[1].value, 4 * 4 * 1024], initializer=tf.truncated_normal_initializer(stddev=0.02))
             b_defc = tf.get_variable('b_defc', [4 * 4 * 1024], initializer=tf.constant_initializer(0.))
-            z_defc1 = tf.matmul(tensor_rand_vec, W_defc) + b_defc
+            z_defc1 = tf.matmul(tensor_z, W_defc) + b_defc
             #deflatten  # [BS,4*4*512]->[BS,4,4,512]
             deconv0 = tf.reshape(z_defc1, [-1, 4, 4, 1024])
 
@@ -193,11 +192,10 @@ class dc_w_gan(GAN):
             # deconv5  # [BS,64,64,64]->[BS,128,128,3]
             W_deconv5 = tf.get_variable('W_deconv5', [5, 5, 3, 64], initializer=tf.truncated_normal_initializer(stddev=0.02))
             z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self._BS, 128, 128, 3], [1, 2, 2, 1])
-            a_deconv5 = tf.nn.tanh(z_deconv5)
-            self.a_deconv5 = a_deconv5
+            self.a_deconv5 = tf.nn.tanh(z_deconv5)
 
         self.g_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='generator')
-        return a_deconv5
+        return self.a_deconv5
 
     def _discriminator(self, inputs):
         tensor_inputs = tf.convert_to_tensor(inputs)  #[BS,W,H,D]=[BS,128,128,3]
@@ -348,13 +346,13 @@ class dc_w_gan(GAN):
 
 
 class gp_dc_w_gan(GAN):
-    def _generator(self, rand_vec):
-        tensor_rand_vec = tf.convert_to_tensor(rand_vec)  #[BS,vec_size]
+    def _generator(self, z):
+        tensor_z = tf.convert_to_tensor(z)  #[BS,vec_size]
         with tf.variable_scope('generator'):
             #defc
-            W_defc = tf.get_variable('W_defc', [tensor_rand_vec.shape[1].value, 4 * 4 * 1024], initializer=tf.truncated_normal_initializer(stddev=0.02))
+            W_defc = tf.get_variable('W_defc', [tensor_z.shape[1].value, 4 * 4 * 1024], initializer=tf.truncated_normal_initializer(stddev=0.02))
             b_defc = tf.get_variable('b_defc', [4 * 4 * 1024], initializer=tf.constant_initializer(0.))
-            z_defc1 = tf.matmul(tensor_rand_vec, W_defc) + b_defc
+            z_defc1 = tf.matmul(tensor_z, W_defc) + b_defc
             #deflatten  # [BS,4*4*512]->[BS,4,4,512]
             deconv0 = tf.reshape(z_defc1, [-1, 4, 4, 1024])
 
