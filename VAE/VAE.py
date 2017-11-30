@@ -1,31 +1,29 @@
+import os
 import tensorflow as tf
 import numpy as np
+import cv2
+from tensorflow.examples.tutorials.mnist import input_data
+
+
+
 
 
 class VAE(object):
     def __init__(self, batch_size, z_dim):
-        self._BS = batch_size
+        self.BS = batch_size
         self.z_dim = z_dim
 
 
     def _get_random_vector(self, mu=None, sigma=None): #mu:[z_dim], #sigma:[z_dim]
         if(mu):
-            return np.random.normal(loc=mu, scale=sigma, size=[self._BS, self.z_dim]).astype(np.float32)
+            return np.random.normal(loc=mu, scale=sigma, size=[self.BS, self.z_dim]).astype(np.float32)
         else:
-            return np.random.normal(size=[self._BS, self.z_dim]).astype(np.float32)
+            return np.random.normal(size=[self.BS, self.z_dim]).astype(np.float32)
 
 
     def _get_dataset(self):
-        #get image paths
-        current_dir = os.getcwd()
-        # parent = os.path.dirname(current_dir)
-        pokemon_dir = os.path.join(current_dir, 'real_image')
-        image_paths = []
-        for each in os.listdir(pokemon_dir):
-            image_paths.append(os.path.join(pokemon_dir, each))
-        tensor_image_paths = tf.convert_to_tensor(image_paths, dtype=tf.string)
-        #data processing func used in map
-        def preprocessing(filename):
+        mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+        def preprocessing(filename): #data processing func used in map
             image_string = tf.read_file(filename)
             image = tf.image.decode_png(image_string)
             image = tf.image.resize_images(image, [128, 128])
@@ -36,18 +34,22 @@ class VAE(object):
             image = tf.cast(image, tf.float32)
             image = image / 255.0
             return image
+        #get image paths
+        current_dir = os.getcwd()
+        # parent = os.path.dirname(current_dir)
+        filenames = os.path.join(current_dir, 'tfrecord/','file1.tfrecord')
         #make dataset
-        dataset = tf.data.Dataset.from_tensor_slices(tensor_image_paths)
+        dataset = tf.data.TFRecordDataset(filenames)
         #dataset = dataset.repeat(32)
         dataset = dataset.map(preprocessing)
         # dataset = dataset.shuffle(3200)
-        dataset = dataset.batch(self._BS)
+        dataset = dataset.batch(self.BS)
 
         return dataset
 
 
     def _encoder(self, X):
-        tensor_inputs = tf.convert_to_tensor(inputs)  # [BS,W,H,D]=[BS,128,128,3]
+        tensor_inputs = tf.convert_to_tensor(X)  # [BS,W,H,D]=[BS,128,128,3]
 
         # conv1  #[BS,128,128,3]->[BS,64,64,64]
         W_conv1 = tf.get_variable('W_conv1', [5, 5, 3, 64],initializer=tf.truncated_normal_initializer(stddev=0.02))
@@ -90,7 +92,7 @@ class VAE(object):
         a_conv4 = tf.nn.leaky_relu(bn_conv4)
 
         # flatten  #[BS,8,8,512]->[BS,32768]
-        flatten = tf.reshape(a_conv4, [self._BS, 32768])
+        flatten = tf.reshape(a_conv4, [self.BS, 32768])
 
         # fc1 #[BS,32768]->[BS,1024]
         W_fc1 = tf.get_variable('W_fc1', [flatten.shape[1].value, 1024],initializer=tf.truncated_normal_initializer(stddev=0.02))
@@ -136,7 +138,7 @@ class VAE(object):
         # deconv1  # [BS,4,4,1024]->[BS,8,8,512]
         W_deconv1 = tf.get_variable('W_deconv1', [5, 5, 512, 1024],
                                     initializer=tf.truncated_normal_initializer(stddev=0.02))
-        z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self._BS, 8, 8, 512], [1, 2, 2, 1])
+        z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self.BS, 8, 8, 512], [1, 2, 2, 1])
         mean_deconv1, variance_deconv1 = tf.nn.moments(z_deconv1, axes=[0, 1, 2])
         offset_deconv1 = tf.get_variable('offset_deconv1', initializer=tf.zeros([512]))
         scale_deconv1 = tf.get_variable('scale_deconv1', initializer=tf.ones([512]))
@@ -146,7 +148,7 @@ class VAE(object):
 
         # deconv2  # [BS,8,8,512]->[BS,16,16,256]
         W_deconv2 = tf.get_variable('W_deconv2', [5, 5, 256, 512],initializer=tf.truncated_normal_initializer(stddev=0.02))
-        z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [self._BS, 16, 16, 256], [1, 2, 2, 1])
+        z_deconv2 = tf.nn.conv2d_transpose(a_deconv1, W_deconv2, [self.BS, 16, 16, 256], [1, 2, 2, 1])
         mean_deconv2, variance_deconv2 = tf.nn.moments(z_deconv2, axes=[0, 1, 2])
         offset_deconv2 = tf.get_variable('offset_deconv2', initializer=tf.zeros([256]))
         scale_deconv2 = tf.get_variable('scale_deconv2', initializer=tf.ones([256]))
@@ -155,7 +157,7 @@ class VAE(object):
 
         # deconv3  # [BS,16,16,256]->[BS,32,32,128]
         W_deconv3 = tf.get_variable('W_deconv3', [5, 5, 128, 256],initializer=tf.truncated_normal_initializer(stddev=0.02))
-        z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [self._BS, 32, 32, 128], [1, 2, 2, 1])
+        z_deconv3 = tf.nn.conv2d_transpose(a_deconv2, W_deconv3, [self.BS, 32, 32, 128], [1, 2, 2, 1])
         mean_deconv3, variance_deconv3 = tf.nn.moments(z_deconv3, axes=[0, 1, 2])
         offset_deconv3 = tf.get_variable('offset_deconv3', initializer=tf.zeros([128]))
         scale_deconv3 = tf.get_variable('scale_deconv3', initializer=tf.ones([128]))
@@ -164,7 +166,7 @@ class VAE(object):
 
         # deconv4  # [BS,32,32,128]->[BS,64,64,64]
         W_deconv4 = tf.get_variable('W_deconv4', [5, 5, 64, 128],initializer=tf.truncated_normal_initializer(stddev=0.02))
-        z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [self._BS, 64, 64, 64], [1, 2, 2, 1])
+        z_deconv4 = tf.nn.conv2d_transpose(a_deconv3, W_deconv4, [self.BS, 64, 64, 64], [1, 2, 2, 1])
         mean_deconv4, variance_deconv4 = tf.nn.moments(z_deconv4, axes=[0, 1, 2])
         offset_deconv4 = tf.get_variable('offset_deconv4', initializer=tf.zeros([64]))
         scale_deconv4 = tf.get_variable('scale_deconv4', initializer=tf.ones([64]))
@@ -173,7 +175,7 @@ class VAE(object):
 
         # deconv5  # [BS,64,64,64]->[BS,128,128,3]
         W_deconv5 = tf.get_variable('W_deconv5', [5, 5, 3, 64],initializer=tf.truncated_normal_initializer(stddev=0.02))
-        z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self._BS, 128, 128, 3], [1, 2, 2, 1])
+        z_deconv5 = tf.nn.conv2d_transpose(a_deconv4, W_deconv5, [self.BS, 128, 128, 3], [1, 2, 2, 1])
 
         return z_deconv5 #recon_X
 
@@ -184,10 +186,10 @@ class VAE(object):
         # VAE
         self.mu, self.sigma = self._encoder(self.X) # [bs, z_dim],#[bs, z_dim]
         self.z = self.mu + self.sigma * tf.random_normal(tf.shape(self.mu), 0, 1, dtype=tf.float32) #[bs, z_dim]
-        self.recon_X = self._decoder(z)
+        self.recon_X = self._decoder(self.z)
         # loss
         self.IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=self.recon_X, labels=self.X),[1, 2, 3])
-        self.KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(sigma) - tf.log(1e-8 + tf.square(sigma)) - 1,[1])
+        self.KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(self.sigma) - tf.log(1e-8 + tf.square(self.sigma)) - 1,[1])
         self.loss = tf.reduce_mean(self.IO_loss + self.KL_loss)
         # optimizers
         self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.5).minimize(self.loss)
@@ -255,5 +257,5 @@ class VAE(object):
                     img_test = sess.run(self.recon_X, feed_dict={self.z: test_vec})
                     img_test = img_test * 255.0
                     img_test.astype(np.uint8)
-                    for i in range(self._BS):
+                    for i in range(self.BS):
                         cv2.imwrite(fake_image_path + '/' + str(i) + '.jpg', img_test[i])

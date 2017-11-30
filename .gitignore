@@ -16,3 +16,7 @@ double_dueling_DQN_FlappyBird/model/checkpoint
 *.jpg
 *.png
 Gradient_penalty_wgan/tfModel/checkpoint
+gan_series/tfModel/checkpoint
+
+*.iml
+*.xml
