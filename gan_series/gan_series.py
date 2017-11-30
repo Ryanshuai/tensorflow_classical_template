@@ -40,7 +40,7 @@ class GAN():
         return dataset
 
     def _get_random_vector(self):
-        rand_vec = np.random.uniform(-1.0, 1.0, size=[self._BS, 100]).astype(np.float32)
+        rand_vec = np.random.normal(size=[self._BS, 100]).astype(np.float32)
         return rand_vec
 
     def _generator(self, rand_vec):

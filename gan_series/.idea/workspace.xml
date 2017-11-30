@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc00c6b8-5a8a-4e6b-ac91-349c638df4f1" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/.idea/Gradient_penalty_wgan.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/.idea/vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/gp_dc_w_gan.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Gradient_penalty_wgan/png2jpg.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gan_series.py" afterPath="$PROJECT_DIR$/gan_series.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,22 +14,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="gan_series.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/gan_series.py">
+      <file leaf-file-name="VAE.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../VAE/VAE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="480" column="53" lean-forward="false" selection-start-line="480" selection-start-column="53" selection-end-line="480" selection-end-column="53" />
+            <state relative-caret-position="450">
+              <caret line="57" column="78" lean-forward="true" selection-start-line="57" selection-start-column="78" selection-end-line="57" selection-end-column="78" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
-                <element signature="e#83#6115#0" expanded="false" />
-                <element signature="e#224#1486#0" expanded="false" />
-                <element signature="e#3147#6115#0" expanded="false" />
-                <element signature="e#6143#19330#0" expanded="false" />
-                <element signature="e#6305#10501#0" expanded="false" />
-                <element signature="e#10673#15131#0" expanded="false" />
-                <element signature="e#19401#23843#0" expanded="false" />
-                <element signature="e#19523#23719#0" expanded="false" />
-                <element signature="e#23891#28349#0" expanded="false" />
+                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#3564#6666#0" expanded="false" />
+                <element signature="e#8378#8495#0" expanded="false" />
+                <element signature="e#8547#8822#0" expanded="false" />
+                <element signature="e#8868#9544#0" expanded="false" />
+                <element signature="e#9663#10925#0" expanded="false" />
+                <element signature="e#12440#15408#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -64,6 +56,13 @@
       <find>print</find>
       <find>model_checkpoint_path</find>
       <find>d_variables</find>
+      <find>load_mnist</find>
+      <find>lrelu</find>
+      <find>prior</find>
+      <find>reuse</find>
+      <find>loc</find>
+      <find>self.z</find>
+      <find>self.z</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -82,14 +81,15 @@
         <option value="$PROJECT_DIR$/ckpt_test.py" />
         <option value="$PROJECT_DIR$/gp_dc_w_gan.py" />
         <option value="$PROJECT_DIR$/gan_series.py" />
+        <option value="$PROJECT_DIR$/../VAE/VAE.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-159" />
-    <option name="y" value="-30" />
-    <option name="width" value="2106" />
-    <option name="height" value="900" />
+    <option name="x" value="60" />
+    <option name="y" value="-19" />
+    <option name="width" value="2573" />
+    <option name="height" value="733" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -107,8 +107,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -264,13 +264,13 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13875338" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4491404" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="1920" y="0" width="1440" height="900" />
       <window_info id="Version Control" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4491404" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="1920" y="0" width="1440" height="900" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.3795309" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="1920" y="23" width="1440" height="877" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -286,7 +286,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="23" />
+      <option name="time" value="25" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -295,8 +295,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pokeGAN.py" />
-    <entry file="file://$PROJECT_DIR$/test2222222.py" />
     <entry file="file://$PROJECT_DIR$/gp_dc_w_gan.py" />
     <entry file="file://$PROJECT_DIR$/test1111.py" />
     <entry file="file://E:/Anaconda3/Lib/site-packages/tensorflow/python/data/util/nest.py" />
@@ -369,21 +367,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2017.2/system/python_stubs/57359179/numpy/random/mtrand.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="735">
+          <caret line="1606" column="51" lean-forward="false" selection-start-line="1606" selection-start-column="51" selection-end-line="1606" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gan_series.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="480" column="53" lean-forward="false" selection-start-line="480" selection-start-column="53" selection-end-line="480" selection-end-column="53" />
+        <state relative-caret-position="1170">
+          <caret line="67" column="70" lean-forward="false" selection-start-line="67" selection-start-column="70" selection-end-line="67" selection-end-column="70" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
-            <element signature="e#83#6115#0" expanded="false" />
             <element signature="e#224#1486#0" expanded="false" />
-            <element signature="e#3147#6115#0" expanded="false" />
-            <element signature="e#6143#19330#0" expanded="false" />
-            <element signature="e#6305#10501#0" expanded="false" />
-            <element signature="e#10673#15131#0" expanded="false" />
-            <element signature="e#19401#23843#0" expanded="false" />
-            <element signature="e#19523#23719#0" expanded="false" />
-            <element signature="e#23891#28349#0" expanded="false" />
+            <element signature="e#6131#19318#0" expanded="false" />
+            <element signature="e#6293#10489#0" expanded="false" />
+            <element signature="e#10661#15119#0" expanded="false" />
+            <element signature="e#19349#29970#0" expanded="false" />
+            <element signature="e#19389#23831#0" expanded="false" />
+            <element signature="e#19511#23707#0" expanded="false" />
+            <element signature="e#23879#28337#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../VAE/VAE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="57" column="78" lean-forward="true" selection-start-line="57" selection-start-column="78" selection-end-line="57" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#3564#6666#0" expanded="false" />
+            <element signature="e#8378#8495#0" expanded="false" />
+            <element signature="e#8547#8822#0" expanded="false" />
+            <element signature="e#8868#9544#0" expanded="false" />
+            <element signature="e#9663#10925#0" expanded="false" />
+            <element signature="e#12440#15408#0" expanded="false" />
           </folding>
         </state>
       </provider>
