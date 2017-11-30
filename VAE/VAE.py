@@ -1,12 +1,6 @@
-import os
-import time
 import tensorflow as tf
 import numpy as np
 
-from ops import *
-from utils import *
-
-import prior_factory as prior
 
 class VAE(object):
     def __init__(self, batch_size, z_dim):
@@ -14,9 +8,9 @@ class VAE(object):
         self.z_dim = z_dim
 
 
-    def _get_random_vector(self, mu=None, sigma=None):
+    def _get_random_vector(self, mu=None, sigma=None): #mu:[z_dim], #sigma:[z_dim]
         if(mu):
-            pass
+            return np.random.normal(loc=mu, scale=sigma, size=[self._BS, self.z_dim]).astype(np.float32)
         else:
             return np.random.normal(size=[self._BS, self.z_dim]).astype(np.float32)
 
@@ -77,8 +71,8 @@ class VAE(object):
 
 
 
-        out = deconv2d(net, [self.batch_size, 28, 28, 1], 4, 4, 2, 2, name='de_dc4')
-        return out
+        recon_X = deconv2d(net, [self.batch_size, 28, 28, 1], 4, 4, 2, 2, name='de_dc4')
+        return recon_X
 
 
     def build_model(self):
@@ -87,10 +81,10 @@ class VAE(object):
         # VAE
         self.mu, self.sigma = self._encoder(self.X) # [bs, z_dim],#[bs, z_dim]
         self.z = self.mu + self.sigma * tf.random_normal(tf.shape(self.mu), 0, 1, dtype=tf.float32) #[bs, z_dim]
-        self.out = self._decoder(z)
-        clip_out = tf.clip_by_value(self.out, 1e-8, 1 - 1e-8)
+        self.recon_X = self._decoder(z)
+        clip_recon_X = tf.clip_by_value(self.recon_X, 1e-8, 1 - 1e-8)
         # loss
-        self.IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=clip_out, labels=self.X),[1, 2, 3])
+        self.IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=clip_recon_X, labels=self.X),[1, 2, 3])
         self.KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(sigma) - tf.log(1e-8 + tf.square(sigma)) - 1,[1])
         self.loss = tf.reduce_mean(self.IO_loss + self.KL_loss)
         # optimizers
@@ -156,48 +150,8 @@ class VAE(object):
                     if not os.path.exists(fake_image_path):
                         os.makedirs(fake_image_path)
                     test_vec = self._get_random_vector()
-                    img_test = sess.run(self.fake_image, feed_dict={self.z: test_vec})
+                    img_test = sess.run(self.recon_X, feed_dict={self.z: test_vec})
                     img_test = img_test * 255.0
                     img_test.astype(np.uint8)
                     for i in range(self._BS):
                         cv2.imwrite(fake_image_path + '/' + str(i) + '.jpg', img_test[i])
-
-
-    def visualize_results(self, epoch):
-        tot_num_samples = min(self.sample_num, self.batch_size)
-        image_frame_dim = int(np.floor(np.sqrt(tot_num_samples)))
-
-        """ random condition, random noise """
-
-        z_sample = prior.gaussian(self.batch_size, self.z_dim)
-
-        samples = self.sess.run(self.fake_images, feed_dict={self.z: z_sample})
-
-        save_images(samples[:image_frame_dim * image_frame_dim, :, :, :], [image_frame_dim, image_frame_dim],
-                    check_folder(
-                        self.result_dir + '/' + self.model_dir) + '/' + self.model_name + '_epoch%03d' % epoch + '_test_all_classes.png')
-
-        """ learned manifold """
-        if self.z_dim == 2:
-            assert self.z_dim == 2
-
-            z_tot = None
-            id_tot = None
-            for idx in range(0, 100):
-                #randomly sampling
-                id = np.random.randint(0,self.num_batches)
-                batch_images = self.data_X[id * self.batch_size:(id + 1) * self.batch_size]
-                batch_labels = self.data_y[id * self.batch_size:(id + 1) * self.batch_size]
-
-                z = self.sess.run(self.mu, feed_dict={self.inputs: batch_images})
-
-                if idx == 0:
-                    z_tot = z
-                    id_tot = batch_labels
-                else:
-                    z_tot = np.concatenate((z_tot, z), axis=0)
-                    id_tot = np.concatenate((id_tot, batch_labels), axis=0)
-
-            save_scattered_image(z_tot, id_tot, -4, 4, name=check_folder(
-                self.result_dir + '/' + self.model_dir) + '/' + self.model_name + '_epoch%03d' % epoch + '_learned_manifold.png')
-

@@ -499,6 +499,6 @@ class gp_dc_w_gan(GAN):
 
 
 if __name__ == "__main__":
-    gan = gp_dc_w_gan(32)
+    gan = gp_dc_w_gan(32, 100)
     gan.build_graph()
     gan.train()
