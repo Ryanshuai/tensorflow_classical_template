@@ -152,16 +152,20 @@ class VAE(object):
 
 
     def build_graph(self):
+        tf.reset_default_graph()
         # placeholder
-        self.X = tf.placeholder(tf.float32, [self.BS, 128, 128 ,3], name='real_images') #[BS,W,H,C]
+        self.X = tf.placeholder(tf.float32, [self.BS, 28, 28 ,3], name='real_images') #[BS,W,H,C]
+        self._X = tf.image.resize_bicubic(self.X, [128, 128])
         # VAE
-        self.mu, self.sigma = self._encoder(self.X) # [bs, z_dim],#[bs, z_dim]
+        self.mu, self.sigma = self._encoder(self._X) # [bs, z_dim],#[bs, z_dim]
         self.z = self.mu + self.sigma * tf.random_normal(tf.shape(self.mu), 0, 1, dtype=tf.float32) #[bs, z_dim]
         self.recon_X = self._decoder(self.z)
         # loss
-        self.IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=self.recon_X, labels=self.X),[1, 2, 3])
-        self.KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(self.sigma) - tf.log(1e-8 + tf.square(self.sigma)) - 1,[1])
-        self.loss = tf.reduce_mean(self.IO_loss + self.KL_loss)
+        IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=self.recon_X, labels=self._X),[1, 2, 3])
+        KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(self.sigma) - tf.log(1e-8 + tf.square(self.sigma)) - 1,[1])
+        self.IO_loss = tf.reduce_mean(IO_loss)
+        self.KL_loss = tf.reduce_mean(KL_loss)
+        self.loss = self.IO_loss + self.KL_loss
         # optimizers
         self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.5).minimize(self.loss)
         #tensorboard
@@ -192,13 +196,13 @@ class VAE(object):
                 print('no_pre_model')
 
             tf_sum_writer.add_graph(sess.graph)
-
             global_step = 0
             for epoch in range(pre_model_epoch + 1, pre_model_epoch + 500):
                 for epoch_step in range(150):
-                    X, label = mnist.train.next_batch(32)
-                    X = tf.image.resize_images(X, [128, 128])
-                    X = tf.image.grayscale_to_rgb(X)
+                    X, label = mnist.train.next_batch(self.BS)
+                    X = np.reshape(X, [self.BS, 28, 28, 1])
+                    X = np.concatenate((X, X, X), axis=3)
+                    X = X/255
                     #train
                     _, sum_merge, loss, IO_loss, KL_loss = sess.run(
                         [self.optimizer, self.sum_merge, self.loss, self.IO_loss, self.KL_loss],
