@@ -66,7 +66,7 @@ class VAE(object):
         a_conv4 = tf.nn.leaky_relu(bn_conv4)
 
         # flatten  #[BS,8,8,512]->[BS,32768]
-        flatten = tf.reshape(a_conv4, [self.BS, 32768])
+        flatten = tf.reshape(a_conv4, [self.BS, -1])
 
         # fc1 #[BS,32768]->[BS,1024]
         W_fc1 = tf.get_variable('W_fc1', [flatten.shape[1].value, 1024],initializer=tf.truncated_normal_initializer(stddev=0.02))
@@ -79,8 +79,8 @@ class VAE(object):
         a_fc1 = tf.nn.leaky_relu(bn_fc1)
 
         # fc1 #[BS,1024]->[BS,2*z_dim]
-        W_fc2 = tf.get_variable('W_fc1', [flatten.shape[1].value, 2 * self.z_dim],initializer=tf.truncated_normal_initializer(stddev=0.02))
-        b_fc2 = tf.get_variable('b_fc1', [2 * self.z_dim], initializer=tf.constant_initializer(0.))
+        W_fc2 = tf.get_variable('W_fc2', [1024, 2 * self.z_dim],initializer=tf.truncated_normal_initializer(stddev=0.02))
+        b_fc2 = tf.get_variable('b_fc2', [2 * self.z_dim], initializer=tf.constant_initializer(0.))
         z_fc2 = tf.matmul(a_fc1, W_fc2) + b_fc2
         mean_fc2, variance_fc2 = tf.nn.moments(z_fc2, axes=[0])
         offset_fc2 = tf.get_variable('offset_fc2', initializer=tf.zeros([2 * self.z_dim]))
@@ -96,8 +96,7 @@ class VAE(object):
     def _decoder(self, z):
         tensor_z = tf.convert_to_tensor(z)  # [BS,vec_size]
         # defc
-        W_defc = tf.get_variable('W_defc', [tensor_z.shape[1].value, 4 * 4 * 1024],
-                                 initializer=tf.truncated_normal_initializer(stddev=0.02))
+        W_defc = tf.get_variable('W_defc', [tensor_z.shape[1].value, 4 * 4 * 1024],initializer=tf.truncated_normal_initializer(stddev=0.02))
         b_defc = tf.get_variable('b_defc', [4 * 4 * 1024], initializer=tf.constant_initializer(0.))
         z_defc1 = tf.matmul(tensor_z, W_defc) + b_defc
         # deflatten  # [BS,4*4*512]->[BS,4,4,512]
@@ -110,14 +109,12 @@ class VAE(object):
         a_deconv0 = tf.nn.relu(bn_deconv0)
 
         # deconv1  # [BS,4,4,1024]->[BS,8,8,512]
-        W_deconv1 = tf.get_variable('W_deconv1', [5, 5, 512, 1024],
-                                    initializer=tf.truncated_normal_initializer(stddev=0.02))
+        W_deconv1 = tf.get_variable('W_deconv1', [5, 5, 512, 1024],initializer=tf.truncated_normal_initializer(stddev=0.02))
         z_deconv1 = tf.nn.conv2d_transpose(a_deconv0, W_deconv1, [self.BS, 8, 8, 512], [1, 2, 2, 1])
         mean_deconv1, variance_deconv1 = tf.nn.moments(z_deconv1, axes=[0, 1, 2])
         offset_deconv1 = tf.get_variable('offset_deconv1', initializer=tf.zeros([512]))
         scale_deconv1 = tf.get_variable('scale_deconv1', initializer=tf.ones([512]))
-        bn_deconv1 = tf.nn.batch_normalization(z_deconv1, mean_deconv1, variance_deconv1, offset_deconv1, scale_deconv1,
-                                               1e-5)
+        bn_deconv1 = tf.nn.batch_normalization(z_deconv1, mean_deconv1, variance_deconv1, offset_deconv1, scale_deconv1,1e-5)
         a_deconv1 = tf.nn.relu(bn_deconv1)
 
         # deconv2  # [BS,8,8,512]->[BS,16,16,256]
@@ -156,7 +153,7 @@ class VAE(object):
 
     def build_graph(self):
         # placeholder
-        self.X = tf.placeholder(tf.float32, [self.BS, 28, 28 ,1], name='real_images') #[BS,W,H,C]
+        self.X = tf.placeholder(tf.float32, [self.BS, 128, 128 ,3], name='real_images') #[BS,W,H,C]
         # VAE
         self.mu, self.sigma = self._encoder(self.X) # [bs, z_dim],#[bs, z_dim]
         self.z = self.mu + self.sigma * tf.random_normal(tf.shape(self.mu), 0, 1, dtype=tf.float32) #[bs, z_dim]
@@ -200,6 +197,8 @@ class VAE(object):
             for epoch in range(pre_model_epoch + 1, pre_model_epoch + 500):
                 for epoch_step in range(150):
                     X, label = mnist.train.next_batch(32)
+                    X = tf.image.resize_images(X, [128, 128])
+                    X = tf.image.grayscale_to_rgb(X)
                     #train
                     _, sum_merge, loss, IO_loss, KL_loss = sess.run(
                         [self.optimizer, self.sum_merge, self.loss, self.IO_loss, self.KL_loss],
