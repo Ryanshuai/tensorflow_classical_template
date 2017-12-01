@@ -5,9 +5,6 @@ import cv2
 from tensorflow.examples.tutorials.mnist import input_data
 
 
-
-
-
 class VAE(object):
     def __init__(self, batch_size, z_dim):
         self.BS = batch_size
@@ -22,30 +19,7 @@ class VAE(object):
 
 
     def _get_dataset(self):
-        mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-        def preprocessing(filename): #data processing func used in map
-            image_string = tf.read_file(filename)
-            image = tf.image.decode_png(image_string)
-            image = tf.image.resize_images(image, [128, 128])
-            image.set_shape([128, 128, 3])
-            # image = tf.image.random_flip_left_right(image)
-            # image = tf.image.random_brightness(image, max_delta=0.1)
-            # image = tf.image.random_contrast(image, lower=0.9, upper=1.1)
-            image = tf.cast(image, tf.float32)
-            image = image / 255.0
-            return image
-        #get image paths
-        current_dir = os.getcwd()
-        # parent = os.path.dirname(current_dir)
-        filenames = os.path.join(current_dir, 'tfrecord/','file1.tfrecord')
-        #make dataset
-        dataset = tf.data.TFRecordDataset(filenames)
-        #dataset = dataset.repeat(32)
-        dataset = dataset.map(preprocessing)
-        # dataset = dataset.shuffle(3200)
-        dataset = dataset.batch(self.BS)
-
-        return dataset
+        return input_data.read_data_sets('MNIST_data', one_hot=True)
 
 
     def _encoder(self, X):
@@ -180,7 +154,7 @@ class VAE(object):
         return z_deconv5 #recon_X
 
 
-    def build_model(self):
+    def build_graph(self):
         # placeholder
         self.X = tf.placeholder(tf.float32, [self.BS, 28, 28 ,1], name='real_images') #[BS,W,H,C]
         # VAE
@@ -206,8 +180,7 @@ class VAE(object):
         saver = tf.train.Saver()
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir='tfModel/')
 
-        image_dataset = self._get_dataset()
-        iterator = image_dataset.make_initializable_iterator()
+        mnist = self._get_dataset()
 
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
@@ -225,13 +198,8 @@ class VAE(object):
 
             global_step = 0
             for epoch in range(pre_model_epoch + 1, pre_model_epoch + 500):
-                sess.run(iterator.initializer)
-                epoch_step = 0
-                while True:
-                    try:
-                        X = sess.run(iterator.get_next())
-                    except tf.errors.OutOfRangeError:
-                        break
+                for epoch_step in range(150):
+                    X, label = mnist.train.next_batch(32)
                     #train
                     _, sum_merge, loss, IO_loss, KL_loss = sess.run(
                         [self.optimizer, self.sum_merge, self.loss, self.IO_loss, self.KL_loss],
@@ -241,7 +209,7 @@ class VAE(object):
                         tf_sum_writer.add_summary(sum_merge, global_step=global_step)
 
                     print('epoch:', epoch, 'epoch_step:', epoch_step, 'global_step:', global_step)
-                    epoch_step, global_step = epoch_step + 1, global_step + 1
+                    global_step = global_step + 1
 
                 if epoch % 50 == 0: # save model
                     print('---------------------')
@@ -259,3 +227,9 @@ class VAE(object):
                     img_test.astype(np.uint8)
                     for i in range(self.BS):
                         cv2.imwrite(fake_image_path + '/' + str(i) + '.jpg', img_test[i])
+
+
+if __name__ == "__main__":
+    vae = VAE(32, 100)
+    vae.build_graph()
+    vae.train()
