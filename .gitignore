@@ -20,3 +20,5 @@ gan_series/tfModel/checkpoint
 
 *.iml
 *.xml
+*.gz
+VAE/tfModel/checkpoint
