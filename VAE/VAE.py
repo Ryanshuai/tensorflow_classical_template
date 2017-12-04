@@ -161,13 +161,13 @@ class VAE(object):
         self.z = self.mu + self.sigma * tf.random_normal(tf.shape(self.mu), 0, 1, dtype=tf.float32) #[bs, z_dim]
         self.recon_X = self._decoder(self.z)
         # loss
-        IO_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=self.recon_X, labels=self._X),[1, 2, 3])# [bs,w,h,c]->[bs,1]
-        KL_loss = 0.5 * tf.reduce_mean(tf.square(self.mu) + tf.square(self.sigma) - tf.log(1e-8 + tf.square(self.sigma)) - 1,[1])# [bs,z_dim]->[bs,1]
+        IO_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits=self.recon_X, labels=self._X),[1, 2, 3])# [bs,w,h,c]->[bs,1]
+        KL_loss = 0.5 * tf.reduce_sum(tf.square(self.mu) + tf.square(self.sigma) - tf.log(1e-8 + tf.square(self.sigma)) - 1,[1])# [bs,z_dim]->[bs,1]
         self.IO_loss = tf.reduce_mean(IO_loss)
         self.KL_loss = tf.reduce_mean(KL_loss)
         self.loss = self.IO_loss + self.KL_loss
         # optimizers
-        self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.5).minimize(self.loss)
+        self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001).minimize(self.loss)
         #tensorboard
         self.sum_IO_loss = tf.summary.scalar("IO_loss", self.IO_loss)
         self.sum_KL_loss = tf.summary.scalar("KL_loss", self.KL_loss)
@@ -220,18 +220,18 @@ class VAE(object):
                     saver.save(sess, './tfModel/epoch' + str(epoch))
 
                 if epoch % 10 == 0: # save images
-                    fake_image_path = './generated_image/epoch' + str(epoch)
-                    if not os.path.exists(fake_image_path):
-                        os.makedirs(fake_image_path)
+                    generated_image = './generated_image/epoch' + str(epoch)
+                    if not os.path.exists(generated_image):
+                        os.makedirs(generated_image)
                     test_vec = self._get_random_vector()
                     img_test = sess.run(self.recon_X, feed_dict={self.z: test_vec})
                     img_test = img_test * 255.0
                     img_test.astype(np.uint8)
                     for i in range(self.BS):
-                        cv2.imwrite(fake_image_path + '/' + str(i) + '.jpg', img_test[i])
+                        cv2.imwrite(generated_image + '/' + str(i) + '.jpg', img_test[i])
 
 
 if __name__ == "__main__":
-    vae = VAE(32, 100)
+    vae = VAE(32, 10)
     vae.build_graph()
     vae.train()
